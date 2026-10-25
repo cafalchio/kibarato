@@ -46,6 +46,11 @@
             font-size: 1.1rem;
             line-height: 1.7;
         }
+        .contact { margin-top: 2rem; line-height: 1.7; }
+        .contact h2 { font-size: 1.2rem; }
+        .contact address { font-style: normal; }
+        .contact a { color: #8a3b32; }
+        .contact a:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
         footer { padding: 1.5rem; color: #665b53; font-size: .85rem; }
     </style>
 </head>
@@ -54,6 +59,14 @@
         <p class="brand">Tecidos KiBarato</p>
         <h1>Página em construção</h1>
         <p class="message">Estamos preparando nosso site com carinho.<br>Em breve, novidades para você!</p>
+        <section class="contact" aria-labelledby="contact-heading">
+            <h2 id="contact-heading">Visite a Ki Barato Tecidos e Malhas</h2>
+            <address>
+                Rua Comendador José García, 292 – Centro<br>
+                Pouso Alegre – MG
+            </address>
+            <p>Telefone fixo: <a href="tel:+553534214505">(35) 3421-4505</a></p>
+        </section>
     </main>
     <footer>&copy; {% now "Y" %} Tecidos KiBarato. Todos os direitos reservados.</footer>
 </body>

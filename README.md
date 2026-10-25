@@ -1,5 +1,18 @@
 # Kibarato
 
+## Search indexing
+
+The site serves `/robots.txt` and `/sitemap.xml` through Django. The sitemap
+lists the public home page using `https://www.tecidoskibarato.com.br`, the
+production hostname in the project settings. When adding public pages, add
+their canonical HTTPS URLs to `templates/sitemap.xml`. If the production
+domain changes, update both indexing templates.
+
+After deployment, submit `https://www.tecidoskibarato.com.br/sitemap.xml` in
+Google Search Console. These files help discovery but do not guarantee
+indexing or ranking. The robots rule discourages crawling `/admin/`; it does
+not replace authentication or prevent access.
+
 Run Django's deployment checks:
 
 ```sh

@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'duasmidnadanuspcdn2387e89e798e-nasdfn-92qrn8wnr2RERWF&!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "www.tecidoskibarato.com.br",
