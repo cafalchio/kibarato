@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,6 +27,15 @@ SECRET_KEY = 'duasmidnadanuspcdn2387e89e798e-nasdfn-92qrn8wnr2RERWF&!'
 DEBUG = False
 
 ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
+
+# Require HTTPS and keep authentication cookies on secure connections.
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+# Start with a short HSTS lifetime before increasing it after deployment.
+SECURE_HSTS_SECONDS = 3600
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 
 # Application definition
@@ -122,6 +132,16 @@ STATIC_URL = 'static/'
 
 MAILERS = {
     'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
+        'BACKEND': 'django.core.mail.backends.smtp.EmailBackend',
+        'OPTIONS': {
+            'host': os.environ.get('SMTP_HOST', 'localhost'),
+            'port': int(os.environ.get('SMTP_PORT', '587')),
+            'username': os.environ.get('SMTP_USERNAME', ''),
+            'password': os.environ.get('SMTP_PASSWORD', ''),
+            'use_tls': True,
+            'timeout': 10,
+        },
     },
 }
+
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
