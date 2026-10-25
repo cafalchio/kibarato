@@ -29,10 +29,11 @@
     if (!navigation.contains(event.target)) setOpen(false);
   });
   mobile.addEventListener('change', () => {
+    toggle.hidden = !mobile.matches;
     if (mobile.matches && links.contains(document.activeElement)) toggle.focus();
     if (!mobile.matches && document.activeElement === toggle) links.querySelector('a').focus();
     setOpen(false);
   });
   navigation.classList.add('menu-ready');
-  toggle.hidden = false;
+  toggle.hidden = !mobile.matches;
 })();
