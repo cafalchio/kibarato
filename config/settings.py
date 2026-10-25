@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'duasmidnadanuspcdn2387e89e798e-nasdfn-92qrn8wnr2RERWF&!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "www.tecidoskibarato.com.br",
@@ -130,6 +130,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static', BASE_DIR / 'assets']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 # Email
