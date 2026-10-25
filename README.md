@@ -1,5 +1,20 @@
 # Kibarato
 
+## Desenvolvimento local
+
+Execute `make setup` na primeira vez e `make dev` para iniciar o site.
+Abra **http://127.0.0.1:8000** (HTTP, sem HTTPS).
+O modo local usa explicitamente `config.settings_dev`, serve CSS e imagens,
+habilita recarga automática e utiliza o banco separado `db.dev.sqlite3`.
+`config.settings` continua sendo a configuração padrão de produção.
+Use `make check` para verificar o ambiente local.
+
+## Arquivos estáticos em produção
+
+Execute `.venv/bin/python manage.py collectstatic --noinput` após atualizar
+CSS ou imagens. Configure o servidor web para servir `/static/` a partir de
+`staticfiles/`. O servidor de desenvolvimento faz isso automaticamente.
+
 ## Search indexing
 
 The site serves `/robots.txt` and `/sitemap.xml` through Django. The sitemap
