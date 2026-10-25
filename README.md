@@ -11,9 +11,28 @@ Use `make check` para verificar o ambiente local.
 
 ## Arquivos estáticos em produção
 
-Execute `.venv/bin/python manage.py collectstatic --noinput` após atualizar
-CSS ou imagens. Configure o servidor web para servir `/static/` a partir de
-`staticfiles/`. O servidor de desenvolvimento faz isso automaticamente.
+Execute `make collectstatic` no VPS após cada atualização do site. Esse comando
+reúne CSS e JavaScript de `static/` e imagens de `assets/` em `staticfiles/`.
+Essa pasta é gerada no servidor e não é versionada no Git.
+
+Configure o Nginx para servir `/static/` a partir de `staticfiles/`, não de
+`static/` (que não contém as imagens). No bloco `server` do site, use o caminho
+absoluto real do projeto no VPS:
+
+```nginx
+location /static/ {
+    alias /caminho/absoluto/kibarato/staticfiles/;
+}
+```
+
+Se houver regras por extensão para imagens, verifique se elas não substituem
+esse mapeamento. Após alterar a configuração, execute `sudo nginx -t` e
+`sudo systemctl reload nginx`.
+
+Verifique se `/static/Widekibarato.png` e `/static/carousel/images.jpeg`
+retornam HTTP 200. Se continuarem retornando 404, confira o caminho do `alias`
+e as regras de localização no Nginx. O servidor de desenvolvimento serve os
+arquivos automaticamente e não precisa dessa configuração.
 
 ## Search indexing
 

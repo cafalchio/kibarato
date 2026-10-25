@@ -1,4 +1,4 @@
-.PHONY: setup dev check
+.PHONY: setup dev check collectstatic
 
 setup:
 	uv sync --locked
@@ -9,3 +9,6 @@ dev:
 
 check:
 	.venv/bin/python manage.py check --settings=config.settings_dev
+
+collectstatic:
+	.venv/bin/python manage.py collectstatic --noinput --settings=config.settings

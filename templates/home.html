@@ -12,7 +12,8 @@
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 <header><nav class="container navigation" aria-label="Menu principal">
 <a class="brand" href="#inicio" aria-label="Ki Barato — início"><img src="{% static 'Widekibarato.png' %}" alt="Ki Barato Tecidos, Malhas e Enxovais" width="2182" height="721"></a>
-<div class="nav-links"><a href="#produtos"><b>Nossos produtos</b></a><a href="#galeria"><b>Galeria</b></a><a href="#como-chegar"><b>Como chegar ↗</b></a></div>
+<button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-links" hidden><span aria-hidden="true">☰</span> Menu</button>
+<div class="nav-links" id="menu-links"><a href="#produtos"><b>Nossos produtos</b></a><a href="#galeria"><b>Galeria</b></a><a href="#como-chegar"><b>Como chegar ↗</b></a></div>
 </nav></header>
 <main id="conteudo">
 <section class="hero" id="inicio" aria-labelledby="hero-title"><div class="container hero-grid">
@@ -63,5 +64,6 @@
 </main>
 <footer><div class="container footer-inner"><span class="footer-brand">Ki Barato <small>Tecidos e Malhas</small></span><p>&copy; {% now "Y" %} Ki Barato. Todos os direitos reservados.</p><a href="#inicio">Voltar ao início ↑</a></div></footer>
 <script src="{% static 'js/carousel.js' %}" defer></script>
+<script src="{% static 'js/navigation.js' %}" defer></script>
 </body>
 </html>
