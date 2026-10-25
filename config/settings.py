@@ -26,7 +26,12 @@ SECRET_KEY = 'duasmidnadanuspcdn2387e89e798e-nasdfn-92qrn8wnr2RERWF&!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "www.tecidoskibarato.com.br",
+    "0.0.0.0",
+    "localhost",
+    "127.0.0.1",
+]
 
 # Require HTTPS and keep authentication cookies on secure connections.
 SECURE_SSL_REDIRECT = True
