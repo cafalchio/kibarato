@@ -1,12 +1,15 @@
 from decimal import Decimal
+from io import BytesIO
 from pathlib import Path
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
+from PIL import Image, ImageOps
 
 
 def promotion_today():
@@ -54,6 +57,19 @@ class Promotion(models.Model):
 
     def __str__(self):
         return self.description[:80]
+
+    def save(self, *args, **kwargs):
+        update_fields = kwargs.get("update_fields")
+        if self.image and not self.image._committed and (update_fields is None or "image" in update_fields):
+            self.image.file.seek(0)
+            with Image.open(self.image.file) as source:
+                image_format = source.format
+                image = ImageOps.exif_transpose(source)
+                image.thumbnail((480, 480), Image.Resampling.LANCZOS)
+                output = BytesIO()
+                image.save(output, format=image_format)
+            self.image = ContentFile(output.getvalue(), name=self.image.name)
+        super().save(*args, **kwargs)
 
     @property
     def display_price(self):

@@ -14,10 +14,17 @@ from django.urls import reverse
 from .models import Promotion
 
 
-def photo():
+def photo(size=(20, 20), image_format='PNG', mode='RGB', orientation=None):
     data = BytesIO()
-    Image.new('RGB', (20, 20), 'red').save(data, format='PNG')
-    return SimpleUploadedFile('photo.png', data.getvalue(), content_type='image/png')
+    image = Image.new(mode, size, 'red')
+    options = {}
+    if orientation is not None:
+        exif = Image.Exif()
+        exif[274] = orientation
+        options['exif'] = exif
+    image.save(data, format=image_format, **options)
+    extension = image_format.lower()
+    return SimpleUploadedFile(f'photo.{extension}', data.getvalue(), content_type=f'image/{extension}')
 
 
 class PromotionAdminTests(TestCase):
@@ -107,6 +114,43 @@ class PromotionAdminTests(TestCase):
             response = self.client.post(url, {'description': 'Foto', 'price': '10.00', **upload})
             self.assertEqual(response.status_code, 200)
             self.assertFalse(Promotion.objects.exists())
+
+    def test_uploaded_images_fit_within_480_pixels(self):
+        for image_format, mode, size, expected in (
+            ('JPEG', 'RGB', (1200, 800), (480, 320)),
+            ('PNG', 'RGBA', (800, 1200), (320, 480)),
+            ('WEBP', 'RGB', (1000, 1000), (480, 480)),
+            ('PNG', 'RGB', (20, 20), (20, 20)),
+        ):
+            with self.subTest(image_format=image_format, size=size):
+                response = self.client.post(reverse('admin:promotions_promotion_add'), {
+                    'image': photo(size, image_format, mode), 'description': 'Resized photo',
+                })
+                self.assertEqual(response.status_code, 302)
+                promotion = Promotion.objects.first()
+                with promotion.image.open('rb') as stored, Image.open(stored) as image:
+                    self.assertEqual(image.size, expected)
+                    self.assertEqual(image.format, image_format)
+                    if mode == 'RGBA':
+                        self.assertEqual(image.mode, 'RGBA')
+
+    def test_camera_replacement_resizes_and_preserves_orientation(self):
+        promotion = Promotion.objects.create(image=photo(), description='Original')
+        response = self.client.post(reverse('admin:promotions_promotion_change', args=[promotion.pk]), {
+            'image_camera': photo((1200, 800), 'JPEG', orientation=6),
+            'description': 'Rotated photo',
+        })
+        self.assertEqual(response.status_code, 302)
+        promotion.refresh_from_db()
+        with promotion.image.open('rb') as stored, Image.open(stored) as image:
+            self.assertEqual(image.size, (320, 480))
+            self.assertIsNone(image.getexif().get(274))
+        original_name = promotion.image.name
+        original_bytes = Path(promotion.image.path).read_bytes()
+        promotion.description = 'Edited description'
+        promotion.save()
+        self.assertEqual(promotion.image.name, original_name)
+        self.assertEqual(Path(promotion.image.path).read_bytes(), original_bytes)
 
     def test_visual_list_search_and_delete_confirmation(self):
         promotion = Promotion.objects.create(image=photo(), description='Tecido floral', price='29.90', unit='m')
