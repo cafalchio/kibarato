@@ -10,3 +10,7 @@ wheels/
 .venv
 staticfiles/
 db.dev.sqlite3*
+
+media/
+media-dev/
+.local/

@@ -1,0 +1,23 @@
+.promotions-admin-intro { padding: 0 20px; line-height: 1.6; }
+.promotions-admin-toolbar { margin: 0 0 24px; }
+.promotions-admin-toolbar a.promotions-add { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 8px 28px; border-radius: 8px; background: var(--button-bg); color: var(--button-fg); font-size: 20px; font-weight: bold; }
+.promotions-admin-toolbar a.promotions-add:hover { background: var(--button-hover-bg); }
+.promotions-add:focus-visible { outline: 3px solid var(--link-fg); outline-offset: 3px; }
+.promotions-admin-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 20px; }
+.promotions-admin-card { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--hairline-color); border-radius: 10px; background: var(--body-bg); }
+.promotions-admin-photo-wrap { position: relative; aspect-ratio: 1; background: var(--darkened-bg); }
+.promotions-admin-photo { display: block; width: 100%; height: 100%; object-fit: cover; }
+.promotions-admin-details { display: flex; flex: 1; flex-direction: column; gap: 14px; padding: 18px; min-width: 0; }
+.promotions-admin-price { position: absolute; right: 12px; bottom: 12px; left: 12px; width: fit-content; max-width: calc(100% - 24px); padding: 8px 14px; border-radius: 6px; background: #bc292d; color: white; font-size: 18px; font-weight: bold; overflow-wrap: anywhere; }
+#changelist .promotions-admin-card h2 { margin: 0; padding: 0; background: none; color: var(--body-fg); font-size: 16px; font-weight: normal; line-height: 1.5; text-transform: none; overflow-wrap: anywhere; }
+.promotions-admin-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+.promotions-admin-actions a { display: inline-flex; flex: 1 1 120px; align-items: center; justify-content: center; min-height: 60px; padding: 12px 20px; box-sizing: border-box; border: 0; border-radius: 8px; font-size: 18px; font-weight: bold; text-decoration: none; }
+.promotions-admin-actions a.promotions-edit { background: #176b42; color: white; }
+.promotions-admin-actions a.promotions-edit:hover { background: #105132; }
+.promotions-admin-actions a.promotions-delete { background: #ba2525; color: white; }
+.promotions-admin-actions a.promotions-delete:hover { background: #931c1c; }
+.promotions-admin-actions a:focus-visible { outline: 3px solid var(--link-fg); outline-offset: 3px; }
+.promotions-admin-empty { grid-column: 1 / -1; padding: 30px; text-align: center; }
+.promotion-current-photo { display: block; width: min(360px, 100%); max-height: 320px; object-fit: contain; border-radius: 8px; }
+@media (max-width: 1100px) { .promotions-admin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .promotions-admin-grid { grid-template-columns: 1fr; padding: 12px; } }

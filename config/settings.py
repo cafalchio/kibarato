@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'promotions.apps.PromotionsConfig',
 ]
 
 MIDDLEWARE = [
@@ -152,3 +153,7 @@ MAILERS = {
 }
 
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
+
+# Uploaded promotion photos (served by Nginx in production).
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"

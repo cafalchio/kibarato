@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.views.generic import TemplateView
+from django.views.generic import RedirectView, TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
+from promotions.views import HomeView
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name='home.html'), name='home'),
+    path('', HomeView.as_view(), name='home'),
     path(
         'robots.txt',
         TemplateView.as_view(template_name='robots.txt', content_type='text/plain'),
@@ -30,5 +33,14 @@ urlpatterns = [
         TemplateView.as_view(template_name='sitemap.xml', content_type='application/xml'),
         name='sitemap',
     ),
+    path('admin/promotions/', admin.site.admin_view(RedirectView.as_view(
+        pattern_name='admin:promotions_promotion_changelist', permanent=False,
+    ))),
+    path('admin/', admin.site.admin_view(RedirectView.as_view(
+        pattern_name='admin:promotions_promotion_changelist', permanent=False,
+    ))),
     path('admin/', admin.site.urls),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

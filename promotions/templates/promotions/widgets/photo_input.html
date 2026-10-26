@@ -1,0 +1,7 @@
+<div>
+  <p>Escolher uma foto:</p>
+  {% include "admin/widgets/clearable_file_input.html" %}
+  <p><label for="{{ widget.attrs.id }}_camera">Ou tirar foto com a câmera:</label></p>
+  <input type="file" name="{{ widget.name }}_camera" id="{{ widget.attrs.id }}_camera" accept="image/*" capture="environment"{% if widget.attrs.disabled %} disabled{% endif %}>
+  <p class="help">No celular, use a opção acima para abrir a câmera. Se selecionar as duas opções, será usada a foto da câmera.</p>
+</div>

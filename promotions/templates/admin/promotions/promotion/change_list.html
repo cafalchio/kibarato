@@ -1,0 +1,38 @@
+{% extends "admin/change_list.html" %}
+{% load admin_urls %}
+
+{% block nav-sidebar %}{% endblock %}
+
+{% block object-tools %}
+{% if has_add_permission %}
+<div class="promotions-admin-toolbar"><a href="{% url cl.opts|admin_urlname:'add' %}" class="promotions-add"><span aria-hidden="true">＋</span> Adicionar promoção</a></div>
+{% endif %}
+{% endblock %}
+
+{% block result_list %}
+<p class="promotions-admin-intro">Estas são as promoções exibidas no site. Use <strong>Editar</strong> para alterar a foto, descrição ou preço. <strong>Deletar</strong> pede confirmação antes de remover a promoção.</p>
+<div class="promotions-admin-grid">
+{% for promotion in cl.result_list %}
+<article class="promotions-admin-card">
+  <div class="promotions-admin-photo-wrap">
+    {% if promotion.image %}<img class="promotions-admin-photo" src="{{ promotion.image.url }}" alt="{{ promotion.description }}" loading="lazy">{% endif %}
+    <span class="promotions-admin-price">{{ promotion.display_price }}</span>
+  </div>
+  <div class="promotions-admin-details">
+    <h2>{{ promotion.description }}</h2>
+    <div class="promotions-admin-actions">
+      {% if has_change_permission %}<a class="promotions-edit" href="{% url cl.opts|admin_urlname:'change' promotion.pk %}" aria-label="Editar: {{ promotion.description }}">Editar</a>{% elif has_view_permission %}<a href="{% url cl.opts|admin_urlname:'change' promotion.pk %}">Ver promoção</a>{% endif %}
+      {% if has_delete_permission %}<a class="promotions-delete" href="{% url cl.opts|admin_urlname:'delete' promotion.pk %}" aria-label="Deletar: {{ promotion.description }}">Deletar</a>{% endif %}
+    </div>
+  </div>
+</article>
+{% empty %}
+<div class="promotions-admin-empty">
+  {% if cl.query %}<h2>Nenhuma promoção encontrada.</h2><p>Tente outra descrição ou <a href="{% url cl.opts|admin_urlname:'changelist' %}">veja todas as promoções</a>.</p>
+  {% else %}<h2>Sua primeira promoção começa aqui.</h2><p>Adicione uma foto, uma descrição e o preço para exibir o produto no site.</p>
+  {% if has_add_permission %}<a href="{% url cl.opts|admin_urlname:'add' %}">Adicionar promoção</a>{% endif %}
+  {% endif %}
+</div>
+{% endfor %}
+</div>
+{% endblock %}
