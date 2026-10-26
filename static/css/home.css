@@ -7,7 +7,7 @@
   --line: #dedbd3;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
 body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; font-size: 17px; line-height: 1.65; }
 a { color: inherit; }
 img { max-width: 100%; height: auto; }
@@ -139,3 +139,7 @@ footer { background: #eeebe3; color: var(--muted); border-top: 1px solid var(--l
 @media (max-width: 480px) {
   .promotions-grid { grid-template-columns: 1fr; }
 }
+
+.store-photo { max-width: 900px; margin: 0 auto; }
+.store-photo img { display: block; width: 100%; height: auto; border-radius: 8px; }
+.store-photo figcaption { margin-top: 16px; color: var(--muted); font-size: 16px; }
