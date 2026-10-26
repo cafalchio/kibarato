@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block result_list %}
-<p class="promotions-admin-intro">Estas são as promoções exibidas no site. Use <strong>Editar</strong> para alterar a foto, descrição ou preço. <strong>Deletar</strong> pede confirmação antes de remover a promoção.</p>
+<p class="promotions-admin-intro">Gerencie as promoções da loja. Use <strong>Editar</strong> para alterar a foto, descrição, preço ou validade. <strong>Deletar</strong> pede confirmação antes de remover a promoção. Promoções vencidas não aparecem no site.</p>
 <div class="promotions-admin-grid">
 {% for promotion in cl.result_list %}
 <article class="promotions-admin-card">
@@ -20,6 +20,7 @@
   </div>
   <div class="promotions-admin-details">
     <h2>{{ promotion.description }}</h2>
+    <p>{% if promotion.is_expired %}<strong>Encerrada — aguardando exclusão automática.</strong>{% elif promotion.ends_on %}Promoção válida até: {{ promotion.ends_on|date:"d/m/Y" }}{% else %}Sem data de término{% endif %}</p>
     <div class="promotions-admin-actions">
       {% if has_change_permission %}<a class="promotions-edit" href="{% url cl.opts|admin_urlname:'change' promotion.pk %}" aria-label="Editar: {{ promotion.description }}">Editar</a>{% elif has_view_permission %}<a href="{% url cl.opts|admin_urlname:'change' promotion.pk %}">Ver promoção</a>{% endif %}
       {% if has_delete_permission %}<a class="promotions-delete" href="{% url cl.opts|admin_urlname:'delete' promotion.pk %}" aria-label="Deletar: {{ promotion.description }}">Deletar</a>{% endif %}

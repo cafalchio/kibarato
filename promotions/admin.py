@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from django.contrib.admin.views.main import ChangeList
 from django.db import models
 from django.utils.html import format_html
@@ -14,8 +15,11 @@ class AllPromotionsChangeList(ChangeList):
 
 @admin.register(Promotion)
 class PromotionAdmin(admin.ModelAdmin):
-    formfield_overrides = {models.ImageField: {"widget": PromotionPhotoWidget}}
-    fields = ("image", "description", "price", "unit")
+    formfield_overrides = {
+        models.ImageField: {"widget": PromotionPhotoWidget},
+        models.DateField: {"widget": forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"})},
+    }
+    fields = ("image", "description", "price", "unit", "ends_on")
     list_display = ("description", "price", "unit")
     search_fields = ("description",)
     search_help_text = "Busque uma promoção pela descrição."

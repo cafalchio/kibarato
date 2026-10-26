@@ -113,3 +113,25 @@ ler os arquivos. Para permitir as fotos de até 10 MB, configure
 `client_max_body_size 12m;` no bloco `server`. Faça backup do banco e de `media/`.
 A exclusão de uma promoção retira o item da galeria; os arquivos antigos são
 mantidos em disco, seguindo o comportamento padrão do Django.
+
+### Validade e exclusão automática
+
+No admin, use o calendário **Válida até**. A promoção continua válida durante todo
+esse dia, no horário de Brasília (`America/Sao_Paulo`). Sem data, não expira.
+As promoções vencidas deixam de aparecer no site imediatamente nas próximas
+requisições, mesmo se o agendamento de limpeza estiver parado.
+
+Após atualizar o código, execute `manage.py migrate`. Para também excluir os
+registros vencidos automaticamente, configure o agendamento no servidor, usando
+`crontab -e` como o usuário `kibarato` (sem sudo). Adicione esta linha, mantendo as
+outras tarefas existentes:
+
+```cron
+*/5 * * * * cd /home/kibarato/htdocs/www.tecidoskibarato.com.br && .venv/bin/python manage.py delete_expired_promotions
+```
+
+Ajuste o caminho se `pwd` mostrar outro diretório. A tarefa verifica a cada cinco
+minutos e só exclui promoções com data anterior ao dia atual em Brasília.
+Para executá-la manualmente: `.venv/bin/python manage.py delete_expired_promotions`.
+Ela não exclui promoções sem validade nem promoções válidas até hoje. Os arquivos
+de imagem continuam sujeitos à política de retenção descrita acima.

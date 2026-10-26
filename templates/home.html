@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Ki Barato Tecidos e Malhas no centro de Pouso Alegre – MG. Tecidos, enxovais e aviamentos. Visite nossa loja na Rua Comendador José García, 292.">
 <title>Ki Barato | Tecidos e Malhas em Pouso Alegre – MG</title>
-<link rel="stylesheet" href="{% static 'css/home.css' %}?v=anchor-spacing-4">
+<link rel="stylesheet" href="{% static 'css/home.css' %}?v=promotion-validity-5">
 </head>
 <body>
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -60,7 +60,7 @@
 <img src="{{ promotion.image.url }}" alt="{{ promotion.description }}" width="600" height="600" loading="lazy">
 <span class="promotion-price">{{ promotion.display_price }}</span>
 </div>
-<figcaption>{{ promotion.description }}</figcaption>
+<figcaption>{{ promotion.description }}{% if promotion.ends_on %}<small class="promotion-validity">Promoção válida até: <time datetime="{{ promotion.ends_on|date:'Y-m-d' }}">{{ promotion.ends_on|date:"d/m/Y" }}</time></small>{% endif %}</figcaption>
 </figure>
 {% empty %}
 <p>Novas promoções em breve.</p>

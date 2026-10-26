@@ -1,10 +1,16 @@
 from decimal import Decimal
 from pathlib import Path
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
+
+
+def promotion_today():
+    return timezone.localdate(timezone=ZoneInfo("America/Sao_Paulo"))
 
 
 def image_path(instance, filename):
@@ -32,6 +38,14 @@ class Promotion(models.Model):
         "unidade de venda", max_length=7, blank=True, default="",
         choices=[("", "Sem unidade"), ("m", "Metro"), ("unidade", "Unidade"), ("kg", "Quilograma (kg)")],
     )
+    ends_on = models.DateField(
+        "válida até", blank=True, null=True, db_index=True,
+        help_text="Válida até o fim deste dia, no horário de Brasília. Depois será removida automaticamente. Deixe vazio para não expirar.",
+    )
+
+    @property
+    def is_expired(self):
+        return self.ends_on is not None and self.ends_on < promotion_today()
 
     class Meta:
         ordering = ["-pk"]

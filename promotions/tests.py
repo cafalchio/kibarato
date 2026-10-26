@@ -45,11 +45,13 @@ class PromotionAdminTests(TestCase):
             self.assertEqual(self.client.get(reverse('admin:' + name)).status_code, 403)
 
     def test_admin_upload_edit_delete_and_public_gallery(self):
+        self.assertContains(self.client.get(reverse('admin:promotions_promotion_add')), 'type="date"')
         response = self.client.post(reverse('admin:promotions_promotion_add'), {
-            'image': photo(), 'description': 'Almofada floral', 'price': '39.90', '_save': 'Save',
+            'image': photo(), 'description': 'Almofada floral', 'price': '39.90', 'ends_on': '2099-12-31', '_save': 'Save',
         })
         self.assertEqual(response.status_code, 302)
         promotion = Promotion.objects.get()
+        self.assertEqual(promotion.ends_on.isoformat(), '2099-12-31')
         self.assertTrue(promotion.image.storage.exists(promotion.image.name))
         response = self.client.get('/')
         self.assertContains(response, 'R$ 39,90')
@@ -204,3 +206,32 @@ class PromotionAdminTests(TestCase):
         })
         self.assertEqual(response.status_code, 302)
         self.assertFalse(Promotion.objects.exists())
+
+
+class PromotionExpiryTests(TestCase):
+    def test_expiry_boundary_and_cleanup(self):
+        from datetime import date
+        from unittest.mock import patch
+        with patch('promotions.models.promotion_today', return_value=date(2026, 10, 26)), patch('promotions.views.promotion_today', return_value=date(2026, 10, 26)):
+            expired = Promotion.objects.create(image='promotions/old.jpg', description='Expired item', ends_on=date(2026, 10, 25))
+            today = Promotion.objects.create(image='promotions/today.jpg', description='Valid today', ends_on=date(2026, 10, 26))
+            future = Promotion.objects.create(image='promotions/future.jpg', description='Future item', ends_on=date(2026, 10, 27))
+            unlimited = Promotion.objects.create(image='promotions/unlimited.jpg', description='No expiry')
+            response = self.client.get('/')
+            self.assertNotContains(response, 'Expired item')
+            for promotion in (today, future, unlimited):
+                self.assertContains(response, promotion.description)
+            self.assertTrue(expired.is_expired)
+            self.assertFalse(today.is_expired)
+            call_command('delete_expired_promotions')
+            self.assertFalse(Promotion.objects.filter(pk=expired.pk).exists())
+            self.assertEqual(Promotion.objects.count(), 3)
+            call_command('delete_expired_promotions')
+            self.assertEqual(Promotion.objects.count(), 3)
+
+    def test_brasilia_date_at_utc_midnight(self):
+        from datetime import datetime, date, timezone
+        from unittest.mock import patch
+        from .models import promotion_today
+        with patch('django.utils.timezone.now', return_value=datetime(2026, 10, 27, 1, tzinfo=timezone.utc)):
+            self.assertEqual(promotion_today(), date(2026, 10, 26))
